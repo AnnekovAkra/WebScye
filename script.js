@@ -1,11 +1,11 @@
 // ==========================================================================
-// 1. УЛЬТРА-ПЛOTНЫЙ ТРЁХСЛОЙНЫЙ КОСМИЧЕСКИЙ ФОН (450 ХАОТИЧНЫХ ЗВЁЗД)
+// 1. УЛЬТРА-ПЛOТНЫЙ ТРЁХСЛОЙНЫЙ КОСМИЧЕСКИЙ ФОН (450 ХАОТИЧНЫХ ЗВЁЗД)
 // ==========================================================================
 const canvas = document.getElementById('starsCanvas');
 const ctx = canvas.getContext('2d');
 
 let stars = [];
-const numStars = 450; // Увеличили количество в 3 раза для максимальной плотности
+const numStars = 450; // Навалили максимум плотности для глубокого космоса
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -14,22 +14,21 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-// Генерируем глубокую трёхмерную звёздную систему
+// Генерируем трехмерную звездную систему с разной глубиной слоев
 for (let i = 0; i < numStars; i++) {
-    // Разделяем звёзды на 3 слоя случайным образом
     let layer = Math.random();
     let radius, vx, vy, alpha, vAlpha, shadow;
 
     if (layer < 0.6) {
-        // 1 слой: Множество мелких дальних звёзд (60% от всей массы)
+        // 1 слой: Мелкая далекая звездная пыль (60% всей массы)
         radius = Math.random() * 0.6 + 0.2;
         vx = (Math.random() - 0.5) * 0.15;
         vy = (Math.random() - 0.5) * 0.15;
         alpha = Math.random() * 0.4 + 0.1;
         vAlpha = Math.random() * 0.005 + 0.002;
-        shadow = 0; // Без тени для экономии производительности
+        shadow = 0;
     } else if (layer < 0.9) {
-        // 2 слой: Средние мерцающие звёзды (30%)
+        // 2 слой: Средние сияющие звезды (30%)
         radius = Math.random() * 1.2 + 0.6;
         vx = (Math.random() - 0.5) * 0.3;
         vy = (Math.random() - 0.5) * 0.3;
@@ -37,13 +36,13 @@ for (let i = 0; i < numStars; i++) {
         vAlpha = Math.random() * 0.01 + 0.005;
         shadow = 4;
     } else {
-        // 3 слой: Крупные, сверх-яркие ближние звёзды (10% — пролетают за матовым стеклом)
+        // 3 layer: Крупные пронзительно-белые звезды, летящие за матовым стеклом (10%)
         radius = Math.random() * 2.2 + 1.2;
         vx = (Math.random() - 0.5) * 0.5;
         vy = (Math.random() - 0.5) * 0.5;
-        alpha = Math.random() * 0.4 + 0.6; // Горят минимум на 60% яркости изначально
+        alpha = Math.random() * 0.4 + 0.6;
         vAlpha = Math.random() * 0.015 + 0.008;
-        shadow = 12; // Мощный неоновый ореол
+        shadow = 12; // Элитный неоновый ореол свечения
     }
 
     stars.push({
@@ -62,11 +61,11 @@ function animateStars() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     stars.forEach(star => {
-        // Хаотичное движение
+        // Движение по хаотичным векторам
         star.x += star.vx;
         star.y += star.vy;
         
-        // Плавное дорогое мерцание
+        // Плавное мерцание
         star.alpha += star.vAlpha;
         if (star.alpha > 1 || star.alpha < 0.1) star.vAlpha = -star.vAlpha;
 
@@ -77,7 +76,7 @@ function animateStars() {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
         
-        // Врубаем неоновую белкую подсветку только для средних и крупных слоёв
+        // Врубаем неоновую белую тень только крупным звездам для экономии ресурсов
         if (star.shadow > 0) {
             ctx.shadowBlur = star.shadow;
             ctx.shadowColor = "#ffffff";
@@ -89,21 +88,21 @@ function animateStars() {
         ctx.fill();
     });
     
-    ctx.shadowBlur = 0; // Жёсткий сброс тени, чтобы остальной интерфейс сайта не лагал
+    ctx.shadowBlur = 0; // Жесткий сброс тени, чтобы интерфейс сайта не тормозил
     requestAnimationFrame(animateStars);
 }
 animateStars();
 
+
 // ==========================================================================
-// 2. ПРЕМИАЛЬНЫЙ КУРСОР "СВЕТОВОЙ КЛИНОК" И МАТОВЫЕ КРУГОВЫЕ ВОЛНЫ
+// 2. ХАЙ-ЭНД КУРСОР "СВЕТОВОЙ КЛИНОК" И МАТОВЫЕ КРУГОВЫЕ ВОЛНЫ
 // ==========================================================================
 const sCursor = document.getElementById('singularityCursor');
 const clickContainer = document.getElementById('clickEffectsContainer');
 
-let mX = 0, mY = 0; // Реальные координаты мыши
-let cX = 0, cY = 0; // Координаты плавного шлейфа
-
-const sSpeed = 0.16; // Благородная скорость инерции
+let mX = 0, mY = 0; // Позиция мыши
+let cX = 0, cY = 0; // Позиция плавного шлейфа
+const sCursorSpeed = 0.16; // Скорость инерции
 
 window.addEventListener('mousemove', (e) => {
     mX = e.clientX;
@@ -115,8 +114,9 @@ function animateSingularityCursor() {
     const dX = mX - cX;
     const dY = mY - cY;
     
-    cX += dX * sSpeed;
-    cY += dY * sSpeed; 
+    // Инерционное плавное следование
+    cX += dX * sCursorSpeed;
+    cY += dY * sCursorSpeed;
     
     sCursor.style.left = `${cX}px`;
     sCursor.style.top = `${cY}px`;
@@ -125,44 +125,31 @@ function animateSingularityCursor() {
 }
 animateSingularityCursor();
 
-// Импульсная матовая круговая волна при клике
+// Генерация круговой матовой волны при нажатии (клике)
 window.addEventListener('mousedown', () => {
     sCursor.classList.add('target-click');
-    
     const wave = document.createElement('div');
     wave.classList.add('click-circle-wave');
     wave.style.left = `${mX}px`;
     wave.style.top = `${mY}px`;
     clickContainer.appendChild(wave);
-    
-    setTimeout(() => { wave.remove(); }, 700); // Чистим память ПК после завершения анимации
+    setTimeout(() => { wave.remove(); }, 700); // Чистим память после окончания анимации
 });
 
 window.addEventListener('mouseup', () => {
     sCursor.classList.remove('target-click');
 });
 
-// Триггеры захвата цели при наведении на интерактивные элементы
 function initCursorTriggers() {
     const targetElements = document.querySelectorAll('a, button, input, .carousel-item, .card, .portfolio-item, .glass-input');
-
     targetElements.forEach(element => {
-        element.addEventListener('mouseenter', () => {
-            sCursor.classList.add('target-locked');
-        });
-        
-        element.addEventListener('mouseleave', () => {
-            sCursor.classList.remove('target-locked');
-        });
+        element.addEventListener('mouseenter', () => { sCursor.classList.add('target-locked'); });
+        element.addEventListener('mouseleave', () => { sCursor.classList.remove('target-locked'); });
     });
 }
 initCursorTriggers();
 
-document.addEventListener('mouseleave', () => {
-    sCursor.style.opacity = 0;
-});
-
-
+document.addEventListener('mouseleave', () => { sCursor.style.opacity = 0; });
 // ==========================================================================
 // 3. ИНТЕЛЛЕКТУАЛЬНАЯ СИСТЕМА 3D КАРУСЕЛИ (10 ТАРИФОВ)
 // ==========================================================================
@@ -189,7 +176,7 @@ function update3DCarousel() {
         let translateZ = absOffset * translateZAmount;
         let rotateY = offset * -rotateYAmount;
         let opacity = 1 - (absOffset * 0.35); 
-        let pointerEvents = absOffset === 0 ? 'auto' : 'none'; // Ссылки кликабельны только на центральной карте
+        let pointerEvents = absOffset === 0 ? 'auto' : 'none'; // Кнопки активны только на центральной карте
 
         item.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`;
         item.style.opacity = opacity;
@@ -199,14 +186,14 @@ function update3DCarousel() {
 }
 update3DCarousel();
 
-// DRAG & DROP (Управление свайпами и мышкой)
+// DRAG & DROP ДЛЯ КАРУСЕЛИ (Управление мышкой)
 let isDragging = false;
 let startX = 0;
 const container = document.querySelector('.carousel-container');
 
-container.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX;
+container.addEventListener('mousedown', (e) => { 
+    isDragging = true; 
+    startX = e.clientX; 
 });
 
 window.addEventListener('mousemove', (e) => {
@@ -214,33 +201,27 @@ window.addEventListener('mousemove', (e) => {
     const currentX = e.clientX;
     const diff = currentX - startX;
 
-    // Если протащили мышь/палец больше чем на 80px, переключаем карту
+    // Если протащили мышь больше чем на 80px, переключаем карту
     if (Math.abs(diff) > 80) {
-        if (diff > 0) {
-            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        } else {
-            currentIndex = (currentIndex + 1) % totalItems;
-        }
+        if (diff > 0) { currentIndex = (currentIndex - 1 + totalItems) % totalItems; }
+        else { currentIndex = (currentIndex + 1) % totalItems; }
         update3DCarousel();
-        isDragging = false; // Сбрасываем триггер для пошагового контроля
+        isDragging = false; // Сбрасываем триггер для плавности контроля
     }
 });
 
 window.addEventListener('mouseup', () => { isDragging = false; });
 
 // Поддержка мобильных тач-свайпов
-container.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; isDragging = true; });
+container.addEventListener('touchstart', (e) => { startX = e.touches.clientX; isDragging = true; });
 container.addEventListener('touchmove', (e) => {
     if (!isDragging) return;
-    const currentX = e.touches[0].clientX;
+    const currentX = e.touches.clientX;
     const diff = currentX - startX;
 
     if (Math.abs(diff) > 60) {
-        if (diff > 0) {
-            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        } else {
-            currentIndex = (currentIndex + 1) % totalItems;
-        }
+        if (diff > 0) { currentIndex = (currentIndex - 1 + totalItems) % totalItems; }
+        else { currentIndex = (currentIndex + 1) % totalItems; }
         update3DCarousel();
         isDragging = false;
     }
@@ -262,7 +243,7 @@ cards3D.forEach(card => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        // Расчет аккуратных углов наклона (до 10 градусов)
+        // Аккуратный угол наклона (до 10 градусов)
         const rotateX = ((centerY - y) / centerY) * 10; 
         const rotateY = ((x - centerX) / centerX) * 10;
 
@@ -270,42 +251,60 @@ cards3D.forEach(card => {
     });
 
     card.addEventListener('mouseleave', () => {
-        card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0)`; // Плавный возврат
+        card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0)`; // Мягкий возврат
     });
 });
+
+
 // ==========================================================================
+// 5. ИНТЕЛЛЕКТУАЛЬНЫЙ ЮРИДИЧЕСКИЙ ДВИЖОК ВКЛАДОК И COOKIE
 // ==========================================================================
-// ИНТЕЛЛЕКТУАЛЬНЫЙ ЮРИДИЧЕСКИЙ ДВИЖОК ВКЛАДОК
-// ==========================================================================
-function openLawModal(event, targetTab) {
-    if (event) event.preventDefault(); // Блокируем перезагрузку/прыжок по якорю
-    
-    document.getElementById("lawModal").classList.add("show");
-    switchLawTab(targetTab); // Сразу открываем ту вкладку, на которую кликнул человек
+document.addEventListener("DOMContentLoaded", () => {
+    const cookieAccepted = localStorage.getItem("webscye_cookies_accepted");
+    if (!cookieAccepted) {
+        // Мягко показываем шторку через 2 секунды после захода на сайт
+        setTimeout(() => { document.getElementById("cookieNotice").classList.add("show"); }, 2000);
+    }
+});
+
+function acceptCookies() {
+    localStorage.setItem("webscye_cookies_accepted", "true");
+    document.getElementById("cookieNotice").classList.remove("show");
 }
 
-function closeLawModal() {
-    document.getElementById("lawModal").classList.remove("show");
+function openLawModal(event, targetTab) {
+    if (event) event.preventDefault(); // Блокируем перезагрузку страницы
+    document.getElementById("lawModal").classList.add("show");
+    switchLawTab(targetTab); // Открываем именно ту вкладку, на которую кликнули
+}
+
+function closeLawModal() { 
+    document.getElementById("lawModal").classList.remove("show"); 
 }
 
 function switchLawTab(tabName) {
-    // 1. Деактивируем все кнопки вкладок
+    // Сбрасываем старые активные классы с кнопок и контента
     document.querySelectorAll('.law-tab-btn').forEach(btn => btn.classList.remove('active'));
-    // 2. Скрываем все текстовые контенты
     document.querySelectorAll('.law-tab-content').forEach(content => content.classList.remove('active'));
     
-    // 3. Активируем нужную кнопку и нужный текст
+    // Активируем нужную вкладку
     document.getElementById(`tab-${tabName}`).classList.add('active');
     document.getElementById(`content-${tabName}`).classList.add('active');
 }
 
-// Дополнительное закрытие по клику на матовую оверлей-подложку вокруг окна
+// Закрытие по клику на пустое пространство вокруг окна
 window.addEventListener("click", (e) => {
     const modal = document.getElementById("lawModal");
-    if (e.target === modal) {
-        closeLawModal();
-    }
+    if (e.target === modal) { closeLawModal(); }
 });
 
+// Валидация продающей формы перед отправкой
+function handleFormSubmit() {
+    const checkbox = document.getElementById("privacyCheckbox");
+    if (!checkbox.checked) { 
+        alert("Пожалуйста, подтвердите согласие на обработку персональных данных."); 
+        return; 
     }
-});
+    alert("Ваш запрос принят. Наш ведущий архитектор свяжется с вами в течение часа.");
+}
+
