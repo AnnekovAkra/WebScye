@@ -274,40 +274,38 @@ cards3D.forEach(card => {
     });
 });
 // ==========================================================================
-// 5. ИНТЕЛЛЕКТУАЛЬНАЯ СИСТЕМА COOKIE И ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ
 // ==========================================================================
-document.addEventListener("DOMContentLoaded", () => {
-    // Проверяем, принимал ли пользователь куки ранее
-    const cookieAccepted = localStorage.getItem("webscye_cookies_accepted");
+// ИНТЕЛЛЕКТУАЛЬНЫЙ ЮРИДИЧЕСКИЙ ДВИЖОК ВКЛАДОК
+// ==========================================================================
+function openLawModal(event, targetTab) {
+    if (event) event.preventDefault(); // Блокируем перезагрузку/прыжок по якорю
     
-    if (!cookieAccepted) {
-        // Если нет — плавно показываем шторку через 2 секунды после загрузки сайта
-        setTimeout(() => {
-            document.getElementById("cookieNotice").classList.add("show");
-        }, 2000);
+    document.getElementById("lawModal").classList.add("show");
+    switchLawTab(targetTab); // Сразу открываем ту вкладку, на которую кликнул человек
+}
+
+function closeLawModal() {
+    document.getElementById("lawModal").classList.remove("show");
+}
+
+function switchLawTab(tabName) {
+    // 1. Деактивируем все кнопки вкладок
+    document.querySelectorAll('.law-tab-btn').forEach(btn => btn.classList.remove('active'));
+    // 2. Скрываем все текстовые контенты
+    document.querySelectorAll('.law-tab-content').forEach(content => content.classList.remove('active'));
+    
+    // 3. Активируем нужную кнопку и нужный текст
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+    document.getElementById(`content-${tabName}`).classList.add('active');
+}
+
+// Дополнительное закрытие по клику на матовую оверлей-подложку вокруг окна
+window.addEventListener("click", (e) => {
+    const modal = document.getElementById("lawModal");
+    if (e.target === modal) {
+        closeLawModal();
     }
 });
 
-function acceptCookies() {
-    // Сохраняем выбор в память браузера навсегда
-    localStorage.setItem("webscye_cookies_accepted", "true");
-    // Плавное скрываем шторку вниз
-    document.getElementById("cookieNotice").classList.remove("show");
-}
-
-function openPrivacyModal(event) {
-    event.preventDefault(); // Блокируем стандартный прыжок по ссылке-якорю
-    document.getElementById("privacyModal").classList.add("show");
-}
-
-function closePrivacyModal() {
-    document.getElementById("privacyModal").classList.remove("show");
-}
-
-// Закрытие политики по клику на пустое пространство вокруг окна
-window.addEventListener("click", (e) => {
-    const modal = document.getElementById("privacyModal");
-    if (e.target === modal) {
-        closePrivacyModal();
     }
 });
