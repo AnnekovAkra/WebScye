@@ -642,3 +642,99 @@ body {
 
 /* Обнуляем градиенты, так как теперь фоном служит картинка */
 .build-menu, .cafe-menu, .tutor-menu { background: transparent !important; }
+/* ==========================================================================
+   СТИЛИ ДЛЯ ЮРИДИЧЕСКОГО ХАБА И ПОДВАЛА
+   ========================================================================== */
+.footer {
+    padding: 40px 20px !important;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-law-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-law-links a {
+    font-size: 0.8rem;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.footer-law-links a:hover {
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+.law-separator {
+    color: #333;
+    font-size: 0.8rem;
+    user-select: none;
+}
+
+/* ВКЛАДКИ ДЛЯ ДОКУМЕНТОВ */
+.law-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+}
+
+.law-tab-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #777;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.law-tab-btn:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+}
+
+.law-tab-btn.active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    font-weight: 600;
+}
+
+/* Скрытие и показ содержимого вкладок */
+.law-tab-content {
+    display: none;
+}
+
+.law-tab-content.active {
+    display: block;
+    animation: fadeInLaw 0.3s ease forwards;
+}
+
+@keyframes fadeInLaw {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .footer-content { text-align: center; }
+    .footer-law-links { flex-direction: column; gap: 8px; }
+    .law-separator { display: none; } /* Скрываем палочки на мобилках */
+    .law-tabs { flex-wrap: wrap; }
+    .law-tab-btn { width: 100%; text-align: center; }
+}
