@@ -273,3 +273,41 @@ cards3D.forEach(card => {
         card.style.transform = `rotateX(0deg) rotateY(0deg) translateY(0)`; // Плавный возврат
     });
 });
+// ==========================================================================
+// 5. ИНТЕЛЛЕКТУАЛЬНАЯ СИСТЕМА COOKIE И ПОЛИТИКИ КОНФИДЕНЦИАЛЬНОСТИ
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    // Проверяем, принимал ли пользователь куки ранее
+    const cookieAccepted = localStorage.getItem("webscye_cookies_accepted");
+    
+    if (!cookieAccepted) {
+        // Если нет — плавно показываем шторку через 2 секунды после загрузки сайта
+        setTimeout(() => {
+            document.getElementById("cookieNotice").classList.add("show");
+        }, 2000);
+    }
+});
+
+function acceptCookies() {
+    // Сохраняем выбор в память браузера навсегда
+    localStorage.setItem("webscye_cookies_accepted", "true");
+    // Плавное скрываем шторку вниз
+    document.getElementById("cookieNotice").classList.remove("show");
+}
+
+function openPrivacyModal(event) {
+    event.preventDefault(); // Блокируем стандартный прыжок по ссылке-якорю
+    document.getElementById("privacyModal").classList.add("show");
+}
+
+function closePrivacyModal() {
+    document.getElementById("privacyModal").classList.remove("show");
+}
+
+// Закрытие политики по клику на пустое пространство вокруг окна
+window.addEventListener("click", (e) => {
+    const modal = document.getElementById("privacyModal");
+    if (e.target === modal) {
+        closePrivacyModal();
+    }
+});
