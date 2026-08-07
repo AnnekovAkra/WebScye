@@ -1,0 +1,525 @@
+/* ==========================================================================
+   1. ГЛОБАЛЬНЫЕ ПРЕМИУМ-СТИЛИ И ПЕРЕМЕННЫЕ
+   ========================================================================== */
+:root {
+    --bg-color: #0a0a0a;              /* Глубокий космический черный */
+    --text-color: #e0e0e0;            /* Смягченный белый, чтобы глаза не уставали */
+    --glass-bg: rgba(255, 255, 255, 0.02); /* Тончайшая основа матового стекла */
+    --glass-border: rgba(255, 255, 255, 0.06); /* Едва заметные дорогие грани */
+    --glow-color: rgba(255, 255, 255, 0.4);   /*尊贵柔 инерционное приглушенное сияние */
+    --glow-strong: rgba(255, 255, 255, 0.65); /* Сияние для главных акцентов */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. ЛЮКСОВЫЙ КУРСОР "СВЕТОВОЙ КЛИНОК" И ЭФФЕКТЫ КЛИКА
+   ========================================================================== */
+@media (pointer: fine) {
+    body, a, button, input, .carousel-container, .card, .portfolio-item, .glass-input {
+        cursor: none !important; /* На ПК отключаем стандартную стрелку Windows */
+    }
+}
+
+.flare-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease, width 0.2s, height 0.2s;
+    transform-origin: center center;
+    will-change: transform, left, top;
+}
+
+/* Угольно-черное ядро-линза */
+.flare-core {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+    transition: all 0.25s ease;
+}
+
+/* Центральная яркая искра */
+.flare-spark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 6px #fff, 0 0 12px #fff;
+    transition: all 0.25s ease;
+}
+
+/* Наведение на кликабельные цели — превращение в ауру фокуса */
+.flare-cursor.target-locked {
+    width: 35px;
+    height: 35px;
+}
+.flare-cursor.target-locked .flare-core {
+    opacity: 0;
+    transform: scale(0.5);
+}
+.flare-cursor.target-locked .flare-spark {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
+}
+
+/* Импульсная матовая волна прелома звезд при клике */
+#clickEffectsContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    pointer-events: none;
+}
+.click-circle-wave {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    animation: luxuryPulseCircle 0.7s cubic-bezier(0.1, 0.8, 0.25, 1) forwards;
+}
+@keyframes luxuryPulseCircle {
+    0% { width: 0; height: 0; transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { width: 160px; height: 160px; transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+/* ==========================================================================
+   3. КОНТРАСТНЫЙ КОСМИЧЕСКИЙ ФОН И МАТОВОЕ СТЕКЛО (GLASSMORPHISM)
+   ========================================================================== */
+#starsCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3;
+    pointer-events: none;
+    background: #0a0a0a;
+}
+
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+}
+
+.glow-text {
+    color: #ffffff;
+    text-shadow: 0 0 8px var(--glow-color);
+}
+
+.glow-text-strong {
+    color: #ffffff;
+    text-shadow: 0 0 12px var(--glow-strong);
+    font-size: 3.5rem;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.brand-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #888;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   4. СТРУКТУРНЫЕ КОМПОНЕНТЫ (ШАПКА, ГЛАВНЫЙ ЭКРАН, КНОПКИ)
+   ========================================================================== */
+.header {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    z-index: 100;
+    border-radius: 50px;
+}
+.logo-wrapper { display: flex; align-items: center; gap: 12px; }
+.logo-text { font-weight: 900; font-size: 1.6rem; letter-spacing: 1px; }
+.nav a { color: #999; text-decoration: none; margin-left: 30px; transition: color 0.3s; font-weight: 500; }
+.nav a:hover { color: #fff; text-shadow: 0 0 5px #fff; }
+
+.hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 120px 20px 60px 20px; }
+.hero-content { max-width: 850px; }
+.subtitle { font-size: 1.2rem; color: #a0a0a0; margin: 25px 0 40px 0; line-height: 1.6; }
+
+/* Дорогие тяжелые кнопки */
+.btn { display: inline-block; padding: 15px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.4s ease; }
+.btn-main { background: #fff; color: #000; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+.btn-main:hover { transform: translateY(-4px); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+.btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2); margin-left: 20px; }
+.btn-secondary:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.6); transform: translateY(-4px); }
+.btn-shiny { background: #fff; color: #000; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.btn-shiny:hover { box-shadow: 0 0 20px #fff; transform: scale(1.02); }
+
+/* ==========================================================================
+   5. МАНФЕСТ ФИЛОСОФИИ КЛУБА И 3D-ПРЕИМУЩЕСТВА
+   ========================================================================== */
+.philosophy-section { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+.luxury-manifesto { padding: 60px; text-align: center; }
+.manifesto-header { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 30px; }
+.manifesto-header h2 { font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; color: #fff; }
+.manifesto-header .line { display: inline-block; width: 50px; height: 1px; background: rgba(255,255,255,0.2); }
+.manifesto-text { font-size: 1.15rem; line-height: 1.8; color: #b0b0b0; max-width: 750px; margin: 0 auto; }
+
+.advantages { max-width: 1200px; margin: 0 auto; padding: 100px 20px; }
+.section-title { text-align: center; font-size: 2.3rem; margin-bottom: 60px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+.card { padding: 40px; text-align: left; transform-style: preserve-3d; perspective: 1000px; transition: border-color 0.3s; }
+.card:hover { border-color: rgba(255,255,255,0.15); }
+.card-icon::before { font-size: 1.8rem; color: #fff; filter: grayscale(1) brightness(2); }
+.icon-bolt::before { content: '⚡'; } .icon-chart::before { content: '📊'; } .icon-diamond::before { content: '💎'; }
+.card h3 { font-size: 1.4rem; margin-bottom: 15px; color: #fff; }
+.card p { color: #888; line-height: 1.6; font-size: 0.95rem; }
+/* ==========================================================================
+   6. МАСШТАБНЫЕ ЛЮКС-МЕТРИКИ (ОГРАНИЧЕННЫЙ ДОСТУП)
+   ========================================================================== */
+.scale-section { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 100px 20px; 
+}
+.scale-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 40px; 
+    margin-top: 40px; 
+}
+.scale-item { 
+    text-align: center; 
+    border-right: 1px solid rgba(255,255,255,0.05); 
+    padding: 20px; 
+}
+.scale-item:last-child { 
+    border-right: none; 
+}
+.scale-number { 
+    display: block; 
+    font-size: 3.5rem; 
+    font-weight: 300; 
+    color: #fff; 
+    text-shadow: 0 0 15px rgba(255,255,255,0.3); 
+    margin-bottom: 15px; 
+}
+.scale-item h4 { 
+    font-size: 1.1rem; 
+    margin-bottom: 10px; 
+    color: #fff; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+}
+.scale-item p { 
+    color: #777; 
+    font-size: 0.9rem; 
+    line-height: 1.6; 
+    max-width: 240px; 
+    margin: 0 auto; 
+}
+
+/* ==========================================================================
+   7. ГОРИЗОНТАЛЬНАЯ ГАЛЕРЕЯ ЖИВЫХ МЕНЮ (БОК О БОК)
+   ========================================================================== */
+.portfolio-section { 
+    max-width: 1200px; 
+    margin: 0 auto; 
+    padding: 100px 20px; 
+    text-align: center; 
+}
+.section-subtitle { 
+    color: #666; 
+    margin-top: -40px; 
+    margin-bottom: 60px; 
+    font-size: 1.1rem; 
+}
+
+/* Принудительно выстраиваем 3 карточки горизонтально в один ряд на ПК */
+.portfolio-grid.vertical-luxury {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) !important; /* Ровно 3 колонки бок о бок */
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 25px; /* Аккуратный зазор между боковыми гранями */
+}
+
+/* Изящные узкие и вытянутые пропорции глянцевого стиля */
+.portfolio-wrapper.tall-card { 
+    position: relative; 
+    width: 100%; 
+    height: 490px; /* Идеальная высота для горизонтального ряда */
+    background: #0f0f0f; 
+    border-radius: 16px; 
+    overflow: hidden; 
+    border: 1px solid rgba(255, 255, 255, 0.04); 
+}
+
+.portfolio-img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.6s ease, filter 0.6s; 
+    filter: grayscale(1); 
+}
+
+.gray-film { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(20, 20, 20, 0.4); 
+    backdrop-filter: blur(10px) brightness(0.7); 
+    -webkit-backdrop-filter: blur(10px) brightness(0.7); 
+    transition: opacity 0.5s, backdrop-filter 0.5s; 
+    z-index: 2; 
+}
+
+/* Интерактивные прототипы меню внутри портфолио */
+.live-menu-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px; /* Чуть уменьшили отступы для компактности в узких картах */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 30px; /* Плотная сборка элементов */
+    opacity: 0.15; 
+    filter: blur(2px);
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    z-index: 1;
+}
+.portfolio-item:hover .live-menu-preview { 
+    opacity: 1; 
+    filter: blur(0px); 
+}
+
+.menu-demo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 12px;
+}
+.demo-logo { font-weight: 800; font-size: 0.85rem; letter-spacing: 1.5px; }
+.demo-links { display: flex; gap: 8px; }
+.demo-links span { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.menu-demo-body { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 12px; }
+.demo-tag { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 1.5px; color: #888; border: 1px solid rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 20px; }
+.menu-demo-body h5 { font-size: 0.95rem; line-height: 1.4; color: #ccc; font-weight: 400; }
+.demo-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 16px; font-size: 0.7rem; border-radius: 30px; font-weight: 600; transition: all 0.3s; }
+.demo-btn:hover { background: #fff; color: #000; transform: translateY(-2px); }
+
+.build-menu { background: linear-gradient(180deg, #0f0f0f 0%, #141619 100%); }
+.cafe-menu { background: linear-gradient(180deg, #0f0f0f 0%, #161410 100%); }
+.tutor-menu { background: linear-gradient(180deg, #0f0f0f 0%, #111418 100%); }
+
+.portfolio-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px; text-align: left; z-index: 3; transform: translateZ(20px); transition: transform 0.5s; }
+.portfolio-info h4 { font-size: 1.15rem; color: #fff; margin-bottom: 6px; }
+.portfolio-info p { color: #777; font-size: 0.8rem; line-height: 1.4; }
+
+.portfolio-item:hover .portfolio-img { filter: grayscale(0); transform: scale(1.03); }
+.portfolio-item:hover .gray-film { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+.portfolio-item:hover .portfolio-info { transform: translateZ(40px) translateY(-3px); }
+
+/* Мобильный адаптив: на смартфонах они плавно перестроятся обратно в один вертикальный ряд */
+@media (max-width: 992px) {
+    .portfolio-grid.vertical-luxury { grid-template-columns: 1fr !important; max-width: 400px; }
+    .portfolio-wrapper.tall-card { height: 460px; }
+}
+
+/* ==========================================================================
+   8. ДИСЦИПЛИНИРОВАННЫЕ СТИЛИ 3D-КАРУСЕЛИ ЦЕН (БЕЗ ДЫР И ЗАЗОРОВ)
+   ========================================================================== */
+.pricing-section { width: 100%; max-width: 100vw; overflow: hidden; padding: 100px 0; position: relative; }
+.carousel-container { width: 100%; height: 600px; display: flex; align-items: center; justify-content: center; position: relative; perspective: 1400px; cursor: grab; }
+.carousel-container:active { cursor: grabbing; }
+.carousel-track { position: absolute; display: flex; align-items: center; justify-content: center; width: 380px; height: 100%; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); }
+
+.carousel-item {
+    position: absolute;
+    width: 380px;
+    padding: 45px 35px;
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start !important; /* Намертво склеиваем элементы к верху */
+    gap: 0px !important; /* Полное уничтожение автоматических зазоров flexbox */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.5s, border-color 0.3s;
+    user-select: none;
+}
+
+.premium-tier { border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 0 30px rgba(255, 255, 255, 0.04); }
+.Ultimate-tier { border-color: rgba(255, 51, 51, 0.2); box-shadow: 0 0 30px rgba(255, 51, 51, 0.05); }
+.badge-exclusive { position: absolute; top: -12px; right: 30px; background: #fff; color: #000; padding: 4px 12px; font-size: 0.7rem; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; border-radius: 20px; z-index: 5; }
+
+/* Склеенный с ценой заголовок тарифа */
+.carousel-item h3 {
+    font-size: 1.6rem;
+    color: #ffffff;
+    margin: 0 0 4px 0 !important; 
+    padding: 0 !important;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+/* Строгий блок стоимости */
+.price-value {
+    font-size: 2.3rem; 
+    font-weight: 300;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    margin: 0 0 30px 0 !important; /* Отступ только снизу — до списка функций */
+    padding: 0 !important;
+    display: block;
+    line-height: 1.3;
+}
+
+/* Маленькая элегантная серая приставка "от" */
+.price-value::first-letter {
+    font-size: 1.1rem;
+    color: #555;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-right: 4px;
+}
+
+.price-features {
+    list-style: none;
+    margin-bottom: auto !important; /* Умный маркер: сбрасывает кнопку строго в низ карты */
+    padding: 0;
+}
+.price-features li {
+    color: #888;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    position: relative;
+    padding-left: 20px;
+    line-height: 1.4;
+}
+.price-features li::before { content: '—'; position: absolute; left: 0; color: #fff; }
+
+.carousel-item .btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   9. ФОРМА ЗАХВАТА, ПОДВАЛ И МОБИЛЬНАЯ АДАПТИВНОСТЬ
+   ========================================================================== */
+.cta-section { max-width: 1200px; margin: 0 auto; padding: 100px 20px; }
+.cta-box { padding: 60px; text-align: center; max-width: 800px; margin: 0 auto; }
+.cta-box p { margin: 20px 0 40px 0; color: #999; }
+.cta-form { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+.glass-input { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(5px); padding: 15px 25px; border-radius: 50px; color: #fff; font-size: 1rem; outline: none; min-width: 260px; transition: all 0.3s; }
+.glass-input:focus { border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); }
+
+.footer { text-align: center; padding: 30px; margin-top: 50px; color: #555; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.05); }
+
+@media (max-width: 768px) {
+    .glow-text-strong { font-size: 2.2rem; }
+    .header { padding: 15px 20px; }
+    .nav a { display: none; }
+    .nav a.btn { display: inline-block; margin: 0; }
+    .hero-buttons { display: flex; flex-direction: column; gap: 15px; align-items: center; }
+    .btn-secondary, .btn-main { width: 100%; margin-left: 0; }
+    .scale-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 40px; }
+    .scale-item:last-child { border-bottom: none; }
+    .luxury-manifesto { padding: 30px 20px; }
+    .portfolio-grid.vertical-luxury { grid-template-columns: 1fr; }
+    .portfolio-wrapper.tall-card { height: 460px; }
+    .cta-form { flex-direction: column; }
+    .glass-input { width: 100%; }
+}
+/* Картинка жестко растягивается на всю вытянутую карточку */
+.portfolio-img { 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    z-index: 0; /* Самый нижний слой внутри карты */
+    transition: transform 0.6s ease, filter 0.6s; 
+    filter: grayscale(1) brightness(0.4); /* Изначально затемняем, чтобы текст читался */
+}
+
+/* При наведении картинка становится сочной и цветной */
+.portfolio-item:hover .portfolio-img { 
+    filter: grayscale(0) brightness(0.6); 
+    transform: scale(1.04); 
+}
+
+/* Меню позиционируется поверх картинки */
+.live-menu-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 30px; 
+    opacity: 0.2; /* Едва заметно под матовой серой пленкой */
+    filter: blur(1px);
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    z-index: 3; /* Выше картинки и выше серой пленки */
+}
+
+/* Обнуляем градиенты, так как теперь фоном служит картинка */
+.build-menu, .cafe-menu, .tutor-menu { background: transparent !important; }
